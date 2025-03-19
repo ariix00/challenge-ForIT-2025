@@ -7,6 +7,7 @@ const port = process.env.PORT;
 const cors = require("cors");
 
 app.use(express.json());
+
 app.use(express.urlencoded());
 app.use(cors());
 
@@ -16,7 +17,6 @@ app.get("/", (req, res) => {});
 app.get("/api/tasks", (req, res) => {
   const taskList = fileSys.readFileSync(tasksPath, "utf-8");
   res.send(taskList);
-  console.log(taskList);
 });
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
@@ -24,11 +24,14 @@ app.listen(port, () => {
 app.post("/api/tasks", (req, res) => {
   const taskList = JSON.parse(fileSys.readFileSync(tasksPath, "utf-8"));
   const newTask = {
-    id: taskList[taskList.length - 1].id + 1,
+    id:
+      taskList[taskList.length] > 0 ? taskList[taskList.length - 1].id + 1 : 1,
     title: req.body.title,
     description: req.body.description,
     completed: false,
   };
+  console.log(req.body.title);
+  console.log(req.body.description);
 
   console.log(taskList);
   taskList.push(newTask);

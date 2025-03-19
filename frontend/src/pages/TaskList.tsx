@@ -38,7 +38,7 @@ const TaskList = () => {
     };
   const handleCompleted = () => {
     fetch(`${api}/${taskToComplete?.id}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },

@@ -29,8 +29,6 @@ app.post("/api/tasks", (req, res) => {
     description: req.body.description,
     completed: false,
   };
-  console.log(req.body.title);
-  console.log(req.body.description);
 
   console.log(taskList);
   taskList.push(newTask);
@@ -53,7 +51,7 @@ app.put("/api/tasks/:id", (req, res) => {
     "utf-8"
   );
 });
-app.delete("api/tasks/:id", (req, res) => {
+app.delete("/api/tasks/:id", (req, res) => {
   console.log(req.params.id);
   const taskList = JSON.parse(fileSys.readFileSync(tasksPath, "utf-8"));
   const filteredTask = taskList.filter((task) => {

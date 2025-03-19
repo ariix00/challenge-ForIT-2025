@@ -1,18 +1,42 @@
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TasksContext, { Task } from "../context/TasksProvider";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import EditForm from "../components/EditForm";
 
 const TaskList = () => {
   const { taskList } = useContext(TasksContext);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
+
   const [openEditForm, setOpenEditForm] = useState(false);
   const handleEdit = (task: Task) => {
     setTaskToEdit(task);
     setOpenEditForm(true);
     console.log(taskToEdit);
   };
+  const { api, setReloadFetch } = useContext(TasksContext);
+
+  const handleSubmit = () => {
+    if (taskToDelete) {
+      fetch(`${api}/${taskToDelete.id}`, {
+        method: "DELETE",
+      }).then(() => {
+        setReloadFetch(true);
+      });
+    }
+  };
+  const handleDelete = (task: Task) => {
+    setTaskToDelete(task);
+  };
+
+  useEffect(() => {
+    if (taskToDelete) {
+      handleSubmit();
+      setTaskToDelete(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskToDelete]);
 
   return (
     <div className="mt-10 max-h-[750px] flex flex-col gap-5 justify-start align-center border-2 rounded-xl border-violet-400/50 p-5 text-xl text-center">
@@ -41,6 +65,9 @@ const TaskList = () => {
                     className="relative text-violet-400 hover:brightness-75 cursor-pointer duration-200"
                   />
                   <FontAwesomeIcon
+                    onClick={() => {
+                      handleDelete(task);
+                    }}
                     icon={faTrash}
                     className="text-violet-400 hover:brightness-75 cursor-pointer duration-200"
                   />

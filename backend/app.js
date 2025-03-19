@@ -40,10 +40,9 @@ app.post("/api/tasks", (req, res) => {
     JSON.stringify(taskList, null, " "),
     "utf-8"
   );
-
-  res.redirect("/");
 });
 app.put("/api/tasks/:id", (req, res) => {
+  console.log(req.body.title, req.body.description);
   const taskList = JSON.parse(fileSys.readFileSync(tasksPath, "utf-8"));
   const editedTask = taskList.find((task) => task.id == req.params.id);
   editedTask.description = req.body.description;
@@ -54,7 +53,6 @@ app.put("/api/tasks/:id", (req, res) => {
     JSON.stringify(taskList, null, " "),
     "utf-8"
   );
-  res.redirect("/");
 });
 app.delete("api/tasks/:id", (req, res) => {
   console.log(req.params.id);

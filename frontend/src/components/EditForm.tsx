@@ -20,13 +20,12 @@ const EditForm = ({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    fetch(`${api}/:id`, {
+    fetch(`${api}/${taskToEdit?.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: taskToEdit?.id,
         title: title,
         description: description,
       }),

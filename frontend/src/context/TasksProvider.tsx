@@ -5,8 +5,8 @@ export interface TasksContextProps {
   taskList?: Task[];
 }
 
-interface Task {
-  id: string;
+export interface Task {
+  id: number;
   title: string;
   description: string;
   completed: boolean;

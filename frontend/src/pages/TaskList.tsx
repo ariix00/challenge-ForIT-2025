@@ -8,7 +8,9 @@ const TaskList = () => {
   const { taskList } = useContext(TasksContext);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
+  const [taskToComplete, setTaskToComplete] = useState<Task | null>(null);
 
+  const [completed, setCompleted] = useState(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const handleEdit = (task: Task) => {
     setTaskToEdit(task);
@@ -29,14 +31,34 @@ const TaskList = () => {
   const handleDelete = (task: Task) => {
     setTaskToDelete(task);
   };
+  const handleCheckboxChange =
+    (task: Task) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setCompleted(event.target.checked);
+      setTaskToComplete(task);
+    };
+  const handleCompleted = () => {
+    fetch(`${api}/${taskToComplete?.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        completed: completed,
+      }),
+    }).then(() => {
+      setReloadFetch(true);
+    });
+  };
 
   useEffect(() => {
     if (taskToDelete) {
       handleSubmit();
+      handleCompleted();
       setTaskToDelete(null);
+      setTaskToComplete(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskToDelete]);
+  }, [taskToDelete, taskToComplete]);
 
   return (
     <div className="mt-10 max-h-[750px] flex flex-col gap-5 justify-start align-center border-2 rounded-xl border-violet-400/50 p-5 text-xl text-center">
@@ -46,6 +68,8 @@ const TaskList = () => {
             <>
               <div className="w-96 max-w-96 bg-zinc-800 h-fit p-5 rounded-xl flex items-center gap-5">
                 <input
+                  checked={task.completed}
+                  onChange={handleCheckboxChange(task)}
                   type="checkbox"
                   className="form-checkbox h-6 w-6 bg-none focus:bg-amber-50 checked:bg-amber-50 cursor-pointer"
                 />

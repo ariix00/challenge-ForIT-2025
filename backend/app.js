@@ -24,8 +24,7 @@ app.listen(port, () => {
 app.post("/api/tasks", (req, res) => {
   const taskList = JSON.parse(fileSys.readFileSync(tasksPath, "utf-8"));
   const newTask = {
-    id:
-      taskList[taskList.length] > 0 ? taskList[taskList.length - 1].id + 1 : 1,
+    id: taskList.length + 1,
     title: req.body.title,
     description: req.body.description,
     completed: false,

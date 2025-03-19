@@ -13,16 +13,14 @@ const TaskList = () => {
     setOpenEditForm(true);
     console.log(taskToEdit);
   };
+
   return (
     <div className="mt-10 max-h-[750px] flex flex-col gap-5 justify-start align-center border-2 rounded-xl border-violet-400/50 p-5 text-xl text-center">
       {taskList ? (
         taskList?.map((task) => {
           return (
             <>
-              <div
-                key={task.id}
-                className="w-96 max-w-96 bg-zinc-800 h-fit p-5 rounded-xl flex items-center gap-5"
-              >
+              <div className="w-96 max-w-96 bg-zinc-800 h-fit p-5 rounded-xl flex items-center gap-5">
                 <input
                   type="checkbox"
                   className="form-checkbox h-6 w-6 bg-none focus:bg-amber-50 checked:bg-amber-50 cursor-pointer"

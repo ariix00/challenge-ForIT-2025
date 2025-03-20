@@ -56,7 +56,6 @@ app.post("/api/tasks", (req, res) => {
     completed: false,
   };
 
-  console.log(taskList);
   taskList.push(newTask);
 });
 app.put("/api/tasks/:id", (req, res) => {
@@ -78,7 +77,7 @@ app.put("/api/tasks/completed/:id", (req, res) => {
   const taskToComplete = taskList.find((task) => task.id == req.params.id);
   taskToComplete.completed = req.body.completed;
 
-  writeTasks();
+  writeTasks(taskList);
 }),
   app.delete("/api/tasks/:id", (req, res) => {
     console.log(req.params.id);

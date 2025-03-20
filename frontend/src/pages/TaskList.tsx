@@ -84,13 +84,7 @@ const TaskList = () => {
                   type="checkbox"
                   className="form-checkbox h-6 w-6 bg-none focus:bg-amber-50 checked:bg-amber-50 cursor-pointer"
                 />
-                <button
-                  className={clsx(
-                    task.completed == false
-                      ? "bg-amber-200 p-5"
-                      : "bg-amber-900"
-                  )}
-                ></button>
+
                 <div className="flex flex-col justify-center flex-1">
                   <h1 className="text-2xl font-bold text-violet-300">
                     {" "}

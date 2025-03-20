@@ -3,9 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TasksContext, { Task } from "../context/TasksProvider";
 import { useContext, useEffect, useState } from "react";
 import EditForm from "../components/EditForm";
+import clsx from "clsx";
 
 const TaskList = () => {
-  const { taskList, api, setReloadFetch } = useContext(TasksContext);
+  const { filter, results, api, setReloadFetch, handleFilterChange } =
+    useContext(TasksContext);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
   const [taskToComplete, setTaskToComplete] = useState<Task | null>();
@@ -49,6 +51,7 @@ const TaskList = () => {
         console.log(error);
       }
   };
+
   const handleCheckboxChange =
     (task: Task) => (event: React.ChangeEvent<HTMLInputElement>) => {
       console.log("Task about to set: ", task);
@@ -56,6 +59,7 @@ const TaskList = () => {
       setTaskToComplete(task);
       // console.log(task, completed);
     };
+
   useEffect(() => {
     if (taskToDelete) {
       handleSubmit();
@@ -70,9 +74,44 @@ const TaskList = () => {
   }, [taskToComplete, completed]);
   return (
     <div className="mt-10 max-h-[750px] overflow-y-scroll custom-scrollbar flex flex-col gap-5 justify-start align-center border-2 rounded-xl border-violet-400/50 p-5 text-xl text-center">
-      {taskList ? (
-        taskList.length > 0 ? (
-          taskList?.map((task) => {
+      <div className="flex gap-2 w-full bg-none text-violet-300">
+        <button
+          value={"false"}
+          className={clsx(
+            filter == "false"
+              ? "p-2 bg-transparent border-2 border-violet-300 rounded-xl"
+              : "p-2 bg-transparent border-2 border-zinc-600 rounded-xl"
+          )}
+          onClick={handleFilterChange}
+        >
+          Uncompleted
+        </button>
+        <button
+          value={"true"}
+          className={clsx(
+            filter == "true"
+              ? "p-2 bg-transparent border-2 border-violet-300 rounded-xl"
+              : "p-2 bg-transparent border-2 border-zinc-600 rounded-xl"
+          )}
+          onClick={handleFilterChange}
+        >
+          Completed
+        </button>
+        <button
+          value={""}
+          className={clsx(
+            filter == ""
+              ? "p-2 bg-transparent border-2 border-violet-300 rounded-xl"
+              : "p-2 bg-transparent border-2 border-zinc-600 rounded-xl"
+          )}
+          onClick={handleFilterChange}
+        >
+          All
+        </button>
+      </div>
+      {results ? (
+        results.length > 0 ? (
+          results?.map((task) => {
             return (
               <>
                 <div className="w-96 max-w-96 bg-zinc-800 h-fit p-5 rounded-xl flex items-center gap-5">

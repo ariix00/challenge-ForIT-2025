@@ -2,8 +2,12 @@ import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 export interface TasksContextProps {
   api: string;
-  taskList?: Task[];
+  results?: Task[];
+  taskList: Task[] | undefined;
+  filter: string;
+  setTaskList: (x: Task[]) => void;
   setReloadFetch: (x: boolean) => void;
+  handleFilterChange: (x: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface Task {
@@ -18,6 +22,8 @@ const TasksProvider = ({ children }: PropsWithChildren) => {
   const api = import.meta.env.VITE_API;
   const [taskList, setTaskList] = useState<Task[]>();
   const [reloadFetch, setReloadFetch] = useState<boolean>();
+  const [filter, setFilter] = useState("");
+
   useEffect(() => {
     (async function () {
       try {
@@ -31,13 +37,31 @@ const TasksProvider = ({ children }: PropsWithChildren) => {
       }
     })();
   }, [api, reloadFetch]);
+  const handleFilterChange = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setFilter(event.currentTarget.value);
+  };
+  let results = [] as Task[];
+
+  if (taskList) {
+    if (filter === "false") {
+      results = [...taskList.filter((x) => x.completed === false)];
+    } else if (filter === "true") {
+      results = [...taskList.filter((x) => x.completed === true)];
+    } else {
+      results = taskList;
+    }
+  }
 
   return (
     <TasksContext.Provider
       value={{
+        results,
         api,
+        filter,
+        setTaskList,
         taskList,
         setReloadFetch,
+        handleFilterChange,
       }}
     >
       {children}

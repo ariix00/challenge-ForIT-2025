@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TasksContext, { Task } from "../context/TasksProvider";
 import { useContext, useEffect, useState } from "react";
 import EditForm from "../components/EditForm";
-import clsx from "clsx";
 
 const TaskList = () => {
   const { taskList } = useContext(TasksContext);
@@ -23,9 +22,8 @@ const TaskList = () => {
     if (taskToDelete) {
       fetch(`${api}/${taskToDelete.id}`, {
         method: "DELETE",
-      }).then(() => {
-        setReloadFetch(true);
       });
+      setReloadFetch(true);
     }
   };
   const handleDelete = (task: Task) => {
@@ -65,7 +63,7 @@ const TaskList = () => {
       setTaskToDelete(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskToDelete, taskToComplete]);
+  }, [taskToDelete]);
   useEffect(() => {
     if (taskToComplete !== null) {
       handleCompleted();

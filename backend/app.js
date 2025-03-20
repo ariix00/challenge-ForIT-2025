@@ -57,6 +57,7 @@ app.post("/api/tasks", (req, res) => {
   };
 
   taskList.push(newTask);
+  writeTasks(taskList);
 });
 app.put("/api/tasks/:id", (req, res) => {
   const taskList = readTasks();
@@ -71,16 +72,15 @@ app.put("/api/tasks/:id", (req, res) => {
 });
 app.put("/api/tasks/completed/:id", (req, res) => {
   const taskList = readTasks();
+  const taskToComplete = taskList.find((task) => task.id == req.params.id);
   if (!taskToComplete) {
     return res.status(404).send({ error: "not found" });
   }
-  const taskToComplete = taskList.find((task) => task.id == req.params.id);
   taskToComplete.completed = req.body.completed;
 
   writeTasks(taskList);
 }),
   app.delete("/api/tasks/:id", (req, res) => {
-    console.log(req.params.id);
     const taskList = readTasks();
     const filteredTask = taskList.filter((task) => {
       return task.id != req.params.id;

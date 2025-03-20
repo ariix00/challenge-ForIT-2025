@@ -3,14 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TasksContext, { Task } from "../context/TasksProvider";
 import { useContext, useEffect, useState } from "react";
 import EditForm from "../components/EditForm";
+import clsx from "clsx";
 
 const TaskList = () => {
   const { taskList } = useContext(TasksContext);
   const [taskToEdit, setTaskToEdit] = useState<Task | null>(null);
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
-  const [taskToComplete, setTaskToComplete] = useState<Task | null>(null);
-
-  const [completed, setCompleted] = useState(false);
+  const [taskToComplete, setTaskToComplete] = useState<Task | null>();
+  const [completed, setCompleted] = useState<boolean>(false);
   const [openEditForm, setOpenEditForm] = useState(false);
   const handleEdit = (task: Task) => {
     setTaskToEdit(task);
@@ -31,35 +31,46 @@ const TaskList = () => {
   const handleDelete = (task: Task) => {
     setTaskToDelete(task);
   };
+
+  const handleCompleted = async () => {
+    if (taskToComplete)
+      try {
+        console.log(taskToComplete.id);
+        fetch(`${api}/completed/${taskToComplete.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            completed: completed,
+          }),
+        });
+        setReloadFetch(true);
+        setTaskToComplete(null);
+        window.location.reload();
+      } catch (error) {
+        console.log(error);
+      }
+  };
   const handleCheckboxChange =
     (task: Task) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      console.log("Task about to set: ", task);
       setCompleted(event.target.checked);
       setTaskToComplete(task);
+      // console.log(task, completed);
     };
-  const handleCompleted = () => {
-    fetch(`${api}/${taskToComplete?.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        completed: completed,
-      }),
-    }).then(() => {
-      setReloadFetch(true);
-    });
-  };
-
   useEffect(() => {
     if (taskToDelete) {
       handleSubmit();
-      handleCompleted();
       setTaskToDelete(null);
-      setTaskToComplete(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskToDelete, taskToComplete]);
-
+  useEffect(() => {
+    if (taskToComplete !== null) {
+      handleCompleted();
+    }
+  }, [taskToComplete, completed]);
   return (
     <div className="mt-10 max-h-[750px] flex flex-col gap-5 justify-start align-center border-2 rounded-xl border-violet-400/50 p-5 text-xl text-center">
       {taskList ? (
@@ -73,6 +84,13 @@ const TaskList = () => {
                   type="checkbox"
                   className="form-checkbox h-6 w-6 bg-none focus:bg-amber-50 checked:bg-amber-50 cursor-pointer"
                 />
+                <button
+                  className={clsx(
+                    task.completed == false
+                      ? "bg-amber-200 p-5"
+                      : "bg-amber-900"
+                  )}
+                ></button>
                 <div className="flex flex-col justify-center flex-1">
                   <h1 className="text-2xl font-bold text-violet-300">
                     {" "}

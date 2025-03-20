@@ -7,7 +7,6 @@ const port = process.env.PORT;
 const cors = require("cors");
 
 app.use(express.json());
-
 app.use(express.urlencoded());
 app.use(cors());
 
@@ -51,16 +50,28 @@ app.put("/api/tasks/:id", (req, res) => {
     "utf-8"
   );
 });
-app.delete("/api/tasks/:id", (req, res) => {
-  console.log(req.params.id);
+app.put("/api/tasks/completed/:id", (req, res) => {
+  console.log(req.body.completed);
   const taskList = JSON.parse(fileSys.readFileSync(tasksPath, "utf-8"));
-  const filteredTask = taskList.filter((task) => {
-    return task.id != req.params.id;
-  });
+  const taskToComplete = taskList.find((task) => task.id == req.params.id);
+  taskToComplete.completed = req.body.completed;
+  console.log(taskToComplete.completed);
   fileSys.writeFileSync(
     tasksPath,
-    JSON.stringify(filteredTask, null, " "),
+    JSON.stringify(taskList, null, " "),
     "utf-8"
   );
-  res.redirect("/");
-});
+}),
+  app.delete("/api/tasks/:id", (req, res) => {
+    console.log(req.params.id);
+    const taskList = JSON.parse(fileSys.readFileSync(tasksPath, "utf-8"));
+    const filteredTask = taskList.filter((task) => {
+      return task.id != req.params.id;
+    });
+    fileSys.writeFileSync(
+      tasksPath,
+      JSON.stringify(filteredTask, null, " "),
+      "utf-8"
+    );
+    res.redirect("/");
+  });

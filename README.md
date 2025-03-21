@@ -36,6 +36,17 @@ Create a web app that allows to create tasks with a form and display them on a l
     cd backend // cd frontend
     npm install
    ```
+-Create a .env file on each folder (backend and frontend) and add the environment variables inside the file:  
+  for backend:
+    ```
+      PORT=3000
+        TASKS_PATH=data/tasks.json
+    ```
+  for frontend:
+   ```
+      VITE_API=http://localhost:3000/api/tasks
+   ```
+
 - Run the server on backend:
     ```bash
     npm start

@@ -36,7 +36,7 @@ Create a web app that allows to create tasks with a form and display them on a l
     cd backend // cd frontend
     npm install
    ```
--Create a .env file on each folder (backend and frontend) and add the environment variables inside the file:  
+- Create a .env file on each folder (backend and frontend) and add the environment variables inside the file:  
   for backend:
     ```
       PORT=3000

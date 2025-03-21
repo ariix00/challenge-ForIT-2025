@@ -40,7 +40,7 @@ Create a web app that allows to create tasks with a form and display them on a l
   for backend:
     ```
       PORT=3000
-        TASKS_PATH=data/tasks.json
+      TASKS_PATH=data/tasks.json
     ```
   for frontend:
    ```
